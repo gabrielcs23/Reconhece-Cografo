@@ -3,15 +3,15 @@
 
 // FALTOU O IMPRIME
 
-//definição da estrutura de árvore de diretório
+//definiÃ§Ã£o da estrutura de Ã¡rvore de diretÃ³rio
 typedef struct coarv{
     struct coarv *pai, *filho, *irmao;
-    int marcado; // 0 marcado, 1 desmarcado, 2 marcado e desmarcado
+    int marcado; // 0 desmarcado, 1 marcado, 2 marcado e desmarcado
     int tipo; // -1 vertice, tipo 0 ou tipo 1
     int id; // nome do vertice caso seja vertice senao -1
 }TCA;
 
-//definição dos métodos básicos de árvores
+//definiÃ§Ã£o dos mÃ©todos bÃ¡sicos de Ã¡rvores
 TCA *cria (int tipo,int id){
     TCA *a = (TCA*) malloc (sizeof(TCA));
     a->pai = NULL;
@@ -22,7 +22,7 @@ TCA *cria (int tipo,int id){
     return a;
 };
 
-//inserção de subarvore "filho" em uma arvore "pai"
+//inserÃ§Ã£o de subarvore "filho" em uma arvore "pai"
 void inserir (TCA *afilho, TCA *apai){
     afilho->irmao = apai->filho;
     afilho->pai = apai;
@@ -40,7 +40,7 @@ void liberar (TCA *a){
     free(a);
 }
 /*
-//mover nó a para ser filho de nó b
+//mover nÃ³ a para ser filho de nÃ³ b
 void mover(TCA *a, TCA*b){
     if(a == a->pai->filho){
         a->pai->filho = a->irmao;
@@ -62,7 +62,7 @@ void mover(TCA *a, TCA*b){
     }
 }
 */
-//remove um nó e seus filhos
+//remove um nÃ³ e seus filhos
 void destruir (TCA *a){
     TCA *i;
     i = a->pai->filho;
@@ -74,7 +74,7 @@ void destruir (TCA *a){
     liberar(a);
 }
 
-//busca e retorna o nó com o nome procurando-o na subárvore a
+//busca e retorna o nÃ³ com o nome procurando-o na subÃ¡rvore a
 TCA* busca (TCA* a, char *c){
     if(!a) return NULL;
     if(a->id == id) return a;
