@@ -86,6 +86,42 @@ TCA* busca (TCA* a, char *c){
     return NULL;
 }
 
+int f(TCA *a){
+    TCA *f = a->filho;
+    if(!f) return 0;
+    int retorno = 1;
+    while(f){
+        f = f->irmao;
+        retorno++;
+    }
+    return retorno;
+}
+
+int mf(TCA *a){
+    TCA *f = a->filho;
+    if(!f) return 0;
+    int retorno = 0;
+    while(f){
+        if(f->marcado == 2)
+            retorno++;
+        f = f->irmao;
+    }
+    return retorno;
+}
+
+TCA *marca_aux(TG *g, TCA *a, int x){
+    if(!a) return NULL;
+    if(a->id != -1){
+        if(buscaAresta(g,a->id,x))
+            a->marcado = 1;
+    }
+    TCA *i;
+    for(i=a->filho;i;i=i->irmao){
+        i = marca_aux(g,i,x);
+    }
+    return NULL;
+}
+
 // FALTOU O IMPRIME, ANIMAL
 
 #endif // ARVDIR_H_INCLUDED
