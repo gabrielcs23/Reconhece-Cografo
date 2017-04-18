@@ -122,6 +122,46 @@ TCA *marca_aux(TG *g, TCA *a, int x){
     return NULL;
 }
 
+void marca_desmarca(TCA *T){
+    TCA *u;
+    for(u=T->filho;u;u->irmao){
+        marca_desmarca(u);
+        if((u->marcado == 1) && (f(u)==mf(u))){
+            u->marcado = 2;
+            if(u->pai){
+                u->pai->marcado = 1;
+            }
+        }
+    }
+}
+
+int vertice_marcado(TCA *T){
+    if(T->marcado == 1)
+        return 1;
+    TCA *u;
+    for(u=T->filho;u;u->irmao){
+        if(vertice_marcado(u))
+            return 1;
+    }
+    return 0;
+}
+
+void reset(TCA *T){
+    if(T)
+        T->marcado = 0;
+    TCA *v;
+    for(v = T->filho;v;v->irmao){
+        reset(v);
+    }
+}
+
+void marcar(TCA *T, TG *x){
+    reset(T);
+    marca_aux(x,T,x->id);
+    marca_desmarca(T);
+    if(f(T) == 1 && vertice_marcado(T))
+        T->marcado == 1;
+}
 // FALTOU O IMPRIME, ANIMAL
 
 #endif // ARVDIR_H_INCLUDED
