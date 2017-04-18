@@ -162,6 +162,35 @@ void marcar(TCA *T, TG *x){
     if(f(T) == 1 && vertice_marcado(T))
         T->marcado == 1;
 }
+
+void adicionar_vertice(TCA *t, int id){
+    TCA *no = cria(-1,id);
+    inserir(no,t);
+}
+
+int reconhece_cografos(TG *g){
+    TCA *r = cria(1,-1);
+    TG *v1 = g, *v2 = g->prox;
+    if(buscaAresta(v1,v2){
+        adicionar_vertice(r,v1->id);
+        adicionar_vertice(r,v2->id);
+    }
+    else{
+        TCA *n = cria(0,-1);
+        inserir(n,r);
+        TCA *v = cria(-1,v1->id);
+        inserir(v,n);
+        v = cria(-1,v2->id);
+        inserir(v,n);
+    }
+    TCA *x;
+    for(x = v2->prox;x;x = x->prox){
+        marcar(r,x);
+        if(ver_marca(r,2)){
+            
+    
+    }    
+}
 // FALTOU O IMPRIME, ANIMAL
 
 #endif // ARVDIR_H_INCLUDED
