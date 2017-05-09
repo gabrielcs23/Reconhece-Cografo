@@ -9,6 +9,9 @@ typedef struct coarv{
     int marcado; // 0 desmarcado, 1 marcado, 2 marcado e desmarcado
     int tipo; // -1 vertice, tipo 0 ou tipo 1
     int id; // nome do vertice caso seja vertice senao -1
+    int f = 0;
+    int mf = 0;
+    int f_marcados = 0;
 }TCA;
 
 //definição dos métodos básicos de árvores
@@ -25,6 +28,8 @@ TCA *cria (int tipo,int id){
 //inserção de subarvore "filho" em uma arvore "pai"
 void inserir (TCA *afilho, TCA *apai){
     afilho->irmao = apai->filho;
+    if(apai)
+        apai->f++;
     afilho->pai = apai;
     apai->filho = afilho;
 }
@@ -85,7 +90,7 @@ TCA* busca (TCA* a, char *c){
     }
     return NULL;
 }
-
+/*
 int f(TCA *a){
     TCA *f = a->filho;
     if(!f) return 0;
@@ -108,12 +113,15 @@ int mf(TCA *a){
     }
     return retorno;
 }
-
+*/
 TCA *marca_aux(TG *g, TCA *a, int x){
     if(!a) return NULL;
     if(a->id != -1){
-        if(buscaAresta(g,a->id,x))
+        if(buscaAresta(g,a->id,x)){
             a->marcado = 1;
+            if(a->pai)
+                a->pai->f_marcados++;
+        }
     }
     TCA *i;
     for(i=a->filho;i;i=i->irmao){
@@ -126,10 +134,14 @@ void marca_desmarca(TCA *T){
     TCA *u;
     for(u=T->filho;u;u->irmao){
         marca_desmarca(u);
-        if((u->marcado == 1) && (f(u)==mf(u))){
+        if((u->marcado == 1) && (u->f==u->mf)){
             u->marcado = 2;
+            u->mf = 0;
             if(u->pai){
                 u->pai->marcado = 1;
+                u->pai->mf++;
+                if(u->pai->pai)
+                    u->pai->pai->f_marcados++;
             }
         }
     }
@@ -147,19 +159,25 @@ int vertice_marcado(TCA *T){
 }
 
 void reset(TCA *T){
-    if(T)
+    if(T){
         T->marcado = 0;
-    TCA *v;
-    for(v = T->filho;v;v->irmao){
-        reset(v);
+        T->mf = 0;
+        T->f_marcados = 0;
+        TCA *v;
+        for(v = T->filho;v;v->irmao){
+            reset(v);
+        }
     }
+    else if(!T->pai){
+        printf("Co-arvore nao possui nos\n");
+        exit(1);
 }
 
 void marcar(TCA *T, TG *x){
     reset(T);
     marca_aux(x,T,x->id);
     marca_desmarca(T);
-    if(f(T) == 1 && vertice_marcado(T))
+    if(T->f == 1 && vertice_marcado(T))
         T->marcado == 1;
 }
 
