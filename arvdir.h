@@ -8,7 +8,7 @@ typedef struct coarv{
     struct coarv *pai, *filho, *irmao;
     int marcado; // 0 desmarcado, 1 marcado, 2 marcado e desmarcado
     int tipo; // -1 vertice, tipo 0 ou tipo 1
-    int id; // nome do vertice caso seja vertice senao -1
+    int id; // nome do vertice caso seja vertice do grafo senao -1
     int f = 0;
     int mf = 0;
     int f_marcados = 0;
@@ -205,8 +205,35 @@ int reconhece_cografos(TG *g){
     for(x = v2->prox;x;x = x->prox){
         marcar(r,x);
         if(ver_marca(r,2)){
-            
-    
+            TCA *ins = cria(-1,x->id);
+            inserir(ins,r);
+            continue;
+        }
+        if(ver_marca(r,0){
+            if(r->f == 1){
+                TCA *ins = cria(-1, x->id);
+                inserir(ins,r->filho);
+            }
+            else{
+                TCA *novor = cria(1,-1);
+                TCA *filhor = cria(0, -1);
+                inserir(filhor, novor);
+                TCA *ins = cria(-1, x->id);
+                inserir(ins, filhor);
+                inserir(r, filhor);
+                r = &novor;
+            }
+            continue;
+        }
+        TCA *u = encontrar_no();
+        //implementar encontrar_no e encontrar o vertice w
+        if(u->tipo == 0){
+            if(u->mf == 1){
+                if(w->pai == u){
+                    
+                }
+            }
+        }    
     }    
 }
 // FALTOU O IMPRIME, ANIMAL
