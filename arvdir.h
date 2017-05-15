@@ -222,6 +222,7 @@ int reconhece_cografos(TG *g){
     TCA *x;
     for(x = v2->prox;x;x = x->prox){
         marcar(r,x);
+        //implementar ver_marca
         if(ver_marca(r,2)){
             TCA *ins = cria(-1,x->id);
             inserir(ins,r);
@@ -285,9 +286,7 @@ int reconhece_cografos(TG *g){
                 inserir(x,nozero);
                 inserir(u,nozero);
             }
-            
         }
-        continue; //é necessário?
     }    
 }
 // FALTOU O IMPRIME, ANIMAL
