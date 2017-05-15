@@ -185,7 +185,25 @@ void adicionar_vertice(TCA *t, int id){
     TCA *no = cria(-1,id);
     inserir(no,t);
 }
-
+TCA * encontrar_no(TCA *r){
+    //u é 0, w é 1, y é 2
+    TCA* retorno[3];
+    retorno[0] = NULL;
+    retorno[1] = NULL;
+    retorno[2] = NULL;
+    if (r->marcado == 0){
+        return retorno;
+    }
+    else if (r->mf != r->f -1){
+        retorno[2] = r;
+    }
+    r->marcado = 0;
+    r->mf = 0;
+    retorno[0] = retorno[1];
+    retorno[1] = r;
+    
+    
+}
 int reconhece_cografos(TG *g){
     TCA *r = cria(1,-1);
     TG *v1 = g, *v2 = g->prox;
@@ -225,15 +243,51 @@ int reconhece_cografos(TG *g){
             }
             continue;
         }
-        TCA *u = encontrar_no();
+        TCA *eno = encontrar_no();
+        TCA *u = eno[0];
+        TCA *w = eno[1];
+        TCA *y = eno[2];
+        if(!u){
+            return 0;
+        }
         //implementar encontrar_no e encontrar o vertice w
+           
         if(u->tipo == 0){
             if(u->mf == 1){
-                if(w->pai == u){
-                    
+                if((w->pai == u) && (!w->filho)){ //tá certo?
+                    TCA *ins = cria(1,-1);
+                    inserir(ins, w->pai);
+                    inserir(w, ins);
+                    inserir(x, ins);
+                }
+                else {
+                    inserir(x,w);
                 }
             }
-        }    
+            else {
+                y = cria(u->tipo,-1);
+                for(TCA *i = u->filho;i;i=i->irmão){
+                    if(i->marcado == 2){
+                        inserir(i, y);
+                    }
+                }
+            }
+            if(u->tipo == 0){
+                TCA *ins = cria (1,-1);
+                inserir(x,ins);
+                inserir(y,ins);
+            }
+            else{
+                TCA *upai = u->pai;
+                inserir(y,upai);
+                TCA *nozero = criar(0,-1);
+                inserir(nozero,y);
+                inserir(x,nozero);
+                inserir(u,nozero);
+            }
+            
+        }
+        continue; //é necessário?
     }    
 }
 // FALTOU O IMPRIME, ANIMAL
