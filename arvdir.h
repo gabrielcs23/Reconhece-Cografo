@@ -185,9 +185,9 @@ void adicionar_vertice(TCA *t, int id){
     TCA *no = cria(-1,id);
     inserir(no,t);
 }
-TCA * encontrar_no(TCA *r){
+TCA ** encontrar_no(TCA *r){
     //u é 0, w é 1, y é 2
-    TCA* retorno[3];
+    TCA** retorno[3];
     retorno[0] = NULL;
     retorno[1] = NULL;
     retorno[2] = NULL;
@@ -204,6 +204,18 @@ TCA * encontrar_no(TCA *r){
     
     
 }
+    
+int ver_marca(TCA *a, int marca){
+    if(!a) return marca;
+    if(a->marcado != marca) return a->marcado;
+    TCA *p;
+    for(p=a->filho;p;p=p->irmao){
+        int r = busca(p,marca);
+        if(r != marca) return r;
+    }
+    return marca;
+}
+    
 int reconhece_cografos(TG *g){
     TCA *r = cria(1,-1);
     TG *v1 = g, *v2 = g->prox;
@@ -223,12 +235,12 @@ int reconhece_cografos(TG *g){
     for(x = v2->prox;x;x = x->prox){
         marcar(r,x);
         //implementar ver_marca
-        if(ver_marca(r,2)){
+        if(ver_marca(r,2) == 2){
             TCA *ins = cria(-1,x->id);
             inserir(ins,r);
             continue;
         }
-        if(ver_marca(r,0){
+        if(ver_marca(r,0) == 0){
             if(r->f == 1){
                 TCA *ins = cria(-1, x->id);
                 inserir(ins,r->filho);
@@ -244,7 +256,7 @@ int reconhece_cografos(TG *g){
             }
             continue;
         }
-        TCA *eno = encontrar_no();
+        TCA **eno = encontrar_no();
         TCA *u = eno[0];
         TCA *w = eno[1];
         TCA *y = eno[2];
@@ -255,9 +267,12 @@ int reconhece_cografos(TG *g){
            
         if(u->tipo == 0){
             if(u->mf == 1){
-                if((w->pai == u) && (!w->filho)){ //tá certo?
+                if((w->pai == u) && (w->marcado == 2) && (w->tipo == -1)){
                     TCA *ins = cria(1,-1);
                     inserir(ins, w->pai);
+                    u->f--;
+                    if(w->marcado == 2)
+                        u->mf--;
                     inserir(w, ins);
                     inserir(x, ins);
                 }
@@ -270,6 +285,8 @@ int reconhece_cografos(TG *g){
                 for(TCA *i = u->filho;i;i=i->irmão){
                     if(i->marcado == 2){
                         inserir(i, y);
+                        u->f--;
+                        u->mf--;
                     }
                 }
             }
@@ -277,18 +294,23 @@ int reconhece_cografos(TG *g){
                 TCA *ins = cria (1,-1);
                 inserir(x,ins);
                 inserir(y,ins);
+                inserir(ins, u);
             }
             else{
                 TCA *upai = u->pai;
                 inserir(y,upai);
+                upai->f--;
+                if(u->marcado == 2)
+                    upai->mf--;
                 TCA *nozero = criar(0,-1);
                 inserir(nozero,y);
                 inserir(x,nozero);
                 inserir(u,nozero);
             }
         }
-    }    
+    }
+    return 1;
 }
-// FALTOU O IMPRIME, ANIMAL
+// FALTOU O IMPRIME ANIMAL
 
 #endif // ARVDIR_H_INCLUDED
