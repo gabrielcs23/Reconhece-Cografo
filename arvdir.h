@@ -302,8 +302,13 @@ int reconhece_cografos(TG *g){
         else{
             TCA *y = cria(u->tipo,-1);
             int usadoy = 0;
-            //falta implementar isso
-            if(um_unico_filho_nao_marcado()){
+            int cardinalidade == 0;
+            TCA *aux;
+            for(aux = u->filho;aux;aux = aux->irmao){
+                if(aux->marcado == 0)
+                    cardinalidade++;
+            }
+            if(cardinalidade == 1){
                 if((w->pai == u) && (w->marcado == 0) && (w->tipo == -1)){
                     TCA *ins = cria(0,-1);
                     inserir(ins, w->pai);
