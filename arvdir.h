@@ -30,6 +30,8 @@ void inserir (TCA *afilho, TCA *apai){
     afilho->irmao = apai->filho;
     if(apai)
         apai->f++;
+    if(afilho->marcado == 2)
+        apai->mf++;
     afilho->pai = apai;
     apai->filho = afilho;
 }
@@ -44,9 +46,12 @@ void liberar (TCA *a){
     }
     free(a);
 }
-/*
+
 //mover nó a para ser filho de nó b
 void mover(TCA *a, TCA*b){
+    a->pai->f--;
+    if(a->marcado == 2)
+        a->pai->mf--;
     if(a == a->pai->filho){
         a->pai->filho = a->irmao;
     } else {
@@ -55,18 +60,13 @@ void mover(TCA *a, TCA*b){
         p->irmao = a->irmao;
     }
     a->pai = b;
+    b->f++;
+    if(a->marcado == 2)
+        b->mf++;
     a->irmao = b->filho;
     b->filho = a;
-    if(!a->arquivo){
-        TDir *aux = (TDir*)b->info;
-        aux->num_dir++;
-    }
-    else{
-        TDir *aux = (TDir*)b->info;
-        aux->num_arq++;
-    }
 }
-*/
+
 //remove um nó e seus filhos
 void destruir (TCA *a){
     TCA *i;
@@ -259,13 +259,14 @@ int reconhece_cografos(TG *g){
         TCA **eno = encontrar_no();
         TCA *u = eno[0];
         TCA *w = eno[1];
-        TCA *y = eno[2];
         if(!u){
             return 0;
         }
         //implementar encontrar_no e encontrar o vertice w
            
         if(u->tipo == 0){
+            TCA *y = cria(u->tipo,-1);
+            int usadoy = 0;
             if(u->mf == 1){
                 if((w->pai == u) && (w->marcado == 2) && (w->tipo == -1)){
                     TCA *ins = cria(1,-1);
@@ -281,32 +282,63 @@ int reconhece_cografos(TG *g){
                 }
             }
             else {
-                y = cria(u->tipo,-1);
+                usadoy = 1;
                 for(TCA *i = u->filho;i;i=i->irmão){
                     if(i->marcado == 2){
-                        inserir(i, y);
-                        u->f--;
-                        u->mf--;
+                        mover(i, y);
                     }
                 }
             }
-            if(u->tipo == 0){
-                TCA *ins = cria (1,-1);
-                inserir(x,ins);
-                inserir(y,ins);
-                inserir(ins, u);
+            TCA *ins = cria (1,-1);
+            mover(x,ins);
+            y->tipo  = 0;
+            usadoy = 1;
+            inserir(y,ins);
+            inserir(ins, u);
+            if(!usadoy)
+                destruir(y);
+        }
+        // rotulo(u) = 1
+        else{
+            TCA *y = cria(u->tipo,-1);
+            int usadoy = 0;
+            //falta implementar isso
+            if(um_unico_filho_nao_marcado()){
+                if((w->pai == u) && (w->marcado == 0) && (w->tipo == -1)){
+                    TCA *ins = cria(0,-1);
+                    inserir(ins, w->pai);
+                    u->f--;
+                    if(w->marcado == 2)
+                        u->mf--;
+                    inserir(w, ins);
+                    inserir(x, ins);
+                }
+                else {
+                    inserir(x,w);
+                }
             }
-            else{
-                TCA *upai = u->pai;
-                inserir(y,upai);
-                upai->f--;
-                if(u->marcado == 2)
-                    upai->mf--;
-                TCA *nozero = criar(0,-1);
-                inserir(nozero,y);
-                inserir(x,nozero);
-                inserir(u,nozero);
+            else {
+                usadoy = 1;
+                for(TCA *i = u->filho;i;i=i->irmão){
+                    if(i->marcado == 0){
+                        mover(i, y);
+                    }
+                }
             }
+            TCA *upai = u->pai;
+            y->tipo = 1;
+            usadoy = 1;
+            inserir(y,upai);
+            upai->f--;
+            if(u->marcado == 2)
+                upai->mf--;
+            TCA *nozero = criar(0,-1);
+            inserir(nozero,y);
+            inserir(x,nozero);
+            inserir(u,nozero);
+            if(!usadoy)
+                destruir(y);
+           }
         }
     }
     return 1;
