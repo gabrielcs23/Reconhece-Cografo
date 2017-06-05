@@ -190,18 +190,54 @@ TCA ** encontrar_no(TCA *r){
     TCA** retorno[2];
     retorno[0] = NULL;
     retorno[1] = NULL;
+    TCA* y = NULL;
     if (r->marcado == 0){
-        return retorno;
+        return NULL;
     }
     else if (r->mf != r->f -1){
-        retorno[2] = r;
+        y = r;
     }
     r->marcado = 0;
     r->mf = 0;
     retorno[0] = retorno[1];
     retorno[1] = r;
-    
-    
+    TCA* t;
+    while(ver_marca(r,1)){
+        // escolher arbitrariamente u
+        if(!y)
+            return NULL;
+        if(u->tipo == 1){
+            if(u->mf != (u->f-1))
+                y = u;
+            if(u->pai->marcado == 1)
+                return NULL;
+            else t = u->pai->pai;
+        }
+        else{
+            y = u;
+            t = u->pai;
+        }
+        u->marcado = 0;
+        u->pai->f--;
+        u->pai->mf++;
+        u->mf = 0;
+    }
+    while(t!=w){
+        if(t == r)
+            return NULL;
+        if(t->marcado == 0)
+            return NULL;
+        if(t->mf != (t->f-1))
+            return NULL;
+        if(t->pai->marcado == 0)
+            return NULL;
+        t->marcado == 0;
+        t->pai->f--;
+        t->pai->mf++;
+        t->mf = 0;
+        t->pai->pai;
+        retorno[1] = retorno[0];
+    }
 }
     
 int ver_marca(TCA *a, int marca){
@@ -255,10 +291,10 @@ int reconhece_cografos(TG *g){
             }
             continue;
         }
-        TCA **eno = encontrar_no();
+        TCA **eno = encontrar_no(r);
         TCA *u = eno[0];
         TCA *w = eno[1];
-        if(!u){
+        if(!eno){
             return 0;
         }
         //implementar encontrar_no e encontrar o vertice w
