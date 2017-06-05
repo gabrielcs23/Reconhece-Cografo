@@ -187,10 +187,9 @@ void adicionar_vertice(TCA *t, int id){
 }
 TCA ** encontrar_no(TCA *r){
     //u é 0, w é 1, y é 2
-    TCA** retorno[3];
+    TCA** retorno[2];
     retorno[0] = NULL;
     retorno[1] = NULL;
-    retorno[2] = NULL;
     if (r->marcado == 0){
         return retorno;
     }
