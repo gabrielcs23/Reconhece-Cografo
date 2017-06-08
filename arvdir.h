@@ -185,25 +185,19 @@ void adicionar_vertice(TCA *t, int id){
     TCA *no = cria(-1,id);
     inserir(no,t);
 }
-TCA ** encontrar_no(TCA *r){
-    //u é 0, w é 1, y é 2
-    TCA** retorno[2];
-    retorno[0] = NULL;
-    retorno[1] = NULL;
-    TCA* y = NULL;
-    if (r->marcado == 0){
-        return NULL;
+
+void remover_marca_filhos(TCA* a){
+    if(!a) return;
+    a->mf = 0;
+    for(a = a->filho;a;a = a->irmao){
+        a->marcado = 0;
     }
-    else if (r->mf != r->f -1){
-        y = r;
-    }
-    r->marcado = 0;
-    r->mf = 0;
-    retorno[0] = retorno[1];
-    retorno[1] = r;
-    TCA* t;
-    while(ver_marca(r,1)){
+}
+
+TCA *encontrar_aux(TCA *u, TCA *w, TCA *y, TCA *r){
+    while(ver_marca(u,1)){
         // escolher arbitrariamente u
+        TCA* t;
         if(!y)
             return NULL;
         if(u->tipo == 1){
@@ -217,26 +211,47 @@ TCA ** encontrar_no(TCA *r){
             y = u;
             t = u->pai;
         }
-        u->marcado = 0;
+        u->marcado = 0; // ou 2?
         u->pai->f--;
-        u->pai->mf++;
-        u->mf = 0;
+        //u->pai->mf++;
+        remover_marca_filhos(u);
+        while(t!=w){
+            if(t == r)
+                return NULL;
+            if(t->marcado == 0)
+                return NULL;
+            if(t->mf != (t->f-1))
+                return NULL;
+            if(t->pai->marcado == 0)
+                return NULL;
+            t->marcado = 2; // ou sera 0???
+            t->pai->f--;
+            //t->pai->mf++;
+            remover_marca_filhos(t);
+            t = t->pai->pai;
+            w = u;
+        }
     }
-    while(t!=w){
-        if(t == r)
-            return NULL;
-        if(t->marcado == 0)
-            return NULL;
-        if(t->mf != (t->f-1))
-            return NULL;
-        if(t->pai->marcado == 0)
-            return NULL;
-        t->marcado == 0;
-        t->pai->f--;
-        t->pai->mf++;
-        t->mf = 0;
-        t->pai->pai;
-        retorno[1] = retorno[0];
+}
+    
+TCA * encontrar_no(TCA *r){
+    //u é 0, w é 1, y é 2
+    TCA* u, *w, *y = NULL;
+    if (r->marcado == 0){
+        return NULL;
+    }
+    else if (r->mf != r->f -1){
+        y = r;
+    }
+    r->marcado = 2;
+    remover_marca_filhos(r);
+    w = r;
+    TCA *f, *ctrl;
+    for(u = w; u; u = u->irmao){
+        for(f = u->filho, u = NULL; f = f->irmao){
+            ctrl = encontrar_aux(f,u,y,r);
+            if(!ctrl) return NULL;
+        }
     }
 }
     
