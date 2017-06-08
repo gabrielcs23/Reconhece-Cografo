@@ -195,50 +195,49 @@ void remover_marca_filhos(TCA* a){
 }
 
 TCA *encontrar_aux(TCA *u, TCA *w, TCA *y, TCA *r){
-    while(ver_marca(u,1)){
-        // escolher arbitrariamente u
-        TCA* t;
-        if(!y)
-            return NULL;
-        if(u->tipo == 1){
-            if(u->mf != (u->f-1))
-                y = u;
-            if(u->pai->marcado == 1)
-                return NULL;
-            else t = u->pai->pai;
-        }
-        else{
-            y = u;
-            t = u->pai;
-        }
-        u->marcado = 0; // ou 2?
-        u->pai->f--;
-        //u->pai->mf++;
-        remover_marca_filhos(u);
-        while(t!=w){
-            if(t == r)
-                return NULL;
-            if(t->marcado == 0)
-                return NULL;
-            if(t->mf != (t->f-1))
-                return NULL;
-            if(t->pai->marcado == 0)
-                return NULL;
-            t->marcado = 0;
-            t->pai->f--;
-            remover_marca_filhos(t);
-            t = t->pai->pai;
-        }
-        w = u;
-    }
+    
 }
     
-TCA * encontrar_no(TCA *r, TCA *w,){
+TCA * encontrar_no(TCA *r, TCA *w){
     TCA *f, *ctrl;
     for(u = w; u; u = u->irmao){
         for(f = u->filho, u = NULL; f = f->irmao){
-            ctrl = encontrar_aux(f,u,y,r);
-            if(!ctrl) return NULL;
+            while(ver_marca(u,1)){
+                // escolher arbitrariamente u
+                TCA* t;
+                if(!y)
+                    return NULL;
+                if(u->tipo == 1){
+                    if(u->mf != (u->f-1))
+                        y = u;
+                    if(u->pai->marcado == 1)
+                        return NULL;
+                    else t = u->pai->pai;
+                }
+                else{
+                    y = u;
+                    t = u->pai;
+                }
+                u->marcado = 0; // ou 2?
+                u->pai->f--;
+                //u->pai->mf++;
+                remover_marca_filhos(u);
+                while(t!=w){
+                    if(t == r)
+                        return NULL;
+                    if(t->marcado == 0)
+                        return NULL;
+                    if(t->mf != (t->f-1))
+                        return NULL;
+                    if(t->pai->marcado == 0)
+                        return NULL;
+                    t->marcado = 0;
+                    t->pai->f--;
+                    remover_marca_filhos(t);
+                    t = t->pai->pai;
+                }
+                w = u;
+            }
         }
     }
 }
