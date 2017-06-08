@@ -190,7 +190,7 @@ void remover_marca_filhos(TCA* a){
     if(!a) return;
     a->mf = 0;
     for(a = a->filho;a;a = a->irmao){
-        a->marcado = 0;
+        if(a->marca == 2) a->marcado = 0;
     }
 }
 
