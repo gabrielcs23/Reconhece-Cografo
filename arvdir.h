@@ -224,28 +224,16 @@ TCA *encontrar_aux(TCA *u, TCA *w, TCA *y, TCA *r){
                 return NULL;
             if(t->pai->marcado == 0)
                 return NULL;
-            t->marcado = 2; // ou sera 0???
+            t->marcado = 0;
             t->pai->f--;
-            //t->pai->mf++;
             remover_marca_filhos(t);
             t = t->pai->pai;
-            w = u;
         }
+        w = u;
     }
 }
     
-TCA * encontrar_no(TCA *r){
-    //u é 0, w é 1, y é 2
-    TCA* u, *w, *y = NULL;
-    if (r->marcado == 0){
-        return NULL;
-    }
-    else if (r->mf != r->f -1){
-        y = r;
-    }
-    r->marcado = 2;
-    remover_marca_filhos(r);
-    w = r;
+TCA * encontrar_no(TCA *r, TCA *w,){
     TCA *f, *ctrl;
     for(u = w; u; u = u->irmao){
         for(f = u->filho, u = NULL; f = f->irmao){
@@ -306,10 +294,18 @@ int reconhece_cografos(TG *g){
             }
             continue;
         }
-        TCA **eno = encontrar_no(r);
-        TCA *u = eno[0];
-        TCA *w = eno[1];
-        if(!eno){
+        TCA* u, *w, *y = NULL;
+        if (r->marcado == 0){
+            return NULL;
+        }
+        else if (r->mf != r->f -1){
+            y = r;
+        }
+        r->marcado = 2;
+        remover_marca_filhos(r);
+        w = r;
+        u = encontrar_no(r);
+        if(!u){
             return 0;
         }
         //implementar encontrar_no e encontrar o vertice w
