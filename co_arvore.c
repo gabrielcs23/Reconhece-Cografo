@@ -1,9 +1,6 @@
-#ifndef ARVDIR_H_INCLUDED
-#define ARVDIR_H_INCLUDED
-
 // FALTOU O IMPRIME
 
-//definição da estrutura de árvore de diretório
+//definição da estrutura de co-árvore
 typedef struct coarv{
     struct coarv *pai, *filho, *irmao;
     int marcado; // 0 desmarcado, 1 marcado, 2 marcado e desmarcado
@@ -399,6 +396,3 @@ int reconhece_cografos(TG *g){
     }
     return 1;
 }
-// FALTOU O IMPRIME ANIMAL
-
-#endif // ARVDIR_H_INCLUDED
